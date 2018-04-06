@@ -7,7 +7,6 @@
  * Title:每天一个排序算法
  */
 
-
 /**
  * 插入排序
  * @param array $arr
@@ -24,6 +23,7 @@ function insert_sort(array $arr)
     }
     return $arr;
 }
+
 /**
  * 希尔排序 标准
  *
@@ -49,26 +49,31 @@ function shell_sort(array $arr)
     }
     return $arr;
 }
+
 /**
  * 冒泡排序
  *
  * @param array $arr
  * @return array
  */
-function bubble_sort(array $arr)
+function bubble_sort($arr)
 {
-    $num = count($arr);
-    for ($i = 0; $i < $num; $i++) {
-        for ($j = $i + 1; $j < $num; $j++) {
-            if ($arr[$i] > $arr[$j]) {
-                $key = $arr[$i];
-                $arr[$i] = $arr[$j];
-                $arr[$j] = $key;
+    $count = count($arr);
+    //外层控制排序轮次
+    for ($i = 0; $i < $count - 1; $i++) {
+        //内层控制每轮比较次数
+        for ($j = 0; $j < $count - 1 - $i; $j++) {
+            if ($arr[$j] > $arr[$j + 1]) {
+                $temp = $arr[$j];
+                $arr[$j] = $arr[$j + 1];
+                $arr[$j + 1] = $temp;
             }
         }
     }
     return $arr;
 }
+
+
 /**
  * 快速排序
  *
@@ -79,15 +84,17 @@ function bubble_sort(array $arr)
  */
 function quick_sort(array &$arr, $left = 0, $right = null)
 {
-    if (is_null($right)) {
+    if (is_null($right)) {//是否为null，是就初始化
         $right = count($arr) - 1;
     }
-    if ($left >= $right) {
+    if ($left >= $right) {//如果左下标大于等于右小标则说明排序完成，退出
         return $arr;
     }
-    $key = $arr[$left];
+    $key = $arr[$left];//基准默认为left
+    //备份左右下标
     $low = $left;
     $high = $right;
+
     while ($left < $right) {
         while ($left < $right && $arr[$right] > $key) {
             $right--;
@@ -98,11 +105,13 @@ function quick_sort(array &$arr, $left = 0, $right = null)
         }
         $arr[$right] = $arr[$left];
     }
+
     $arr[$right] = $key;
     quick_sort($arr, $low, $left - 1);
     quick_sort($arr, $left + 1, $high);
     return $arr;
 }
+
 /**
  * 直接选择排序
  *
@@ -111,10 +120,10 @@ function quick_sort(array &$arr, $left = 0, $right = null)
  */
 function select_sort(array $arr)
 {
-    $n = count($arr);
-    for ($i = 0; $i < $n; $i++) {
+    $len = count($arr);
+    for ($i = 0; $i < $len - 1; $i++) {
         $key = $i;
-        for ($j = $i + 1; $j < $n; $j++) {
+        for ($j = $i + 1; $j < $len; $j++) {
             if ($arr[$j] < $arr[$key]) {
                 $key = $j;
             }
@@ -125,6 +134,7 @@ function select_sort(array $arr)
     }
     return $arr;
 }
+
 /**
  * 堆排序
  *
@@ -143,6 +153,7 @@ function heap_sort(array $arr)
     }
     return $arr;
 }
+
 function build_heap(array &$arr)
 {
     $n = count($arr) - 1;
@@ -150,6 +161,7 @@ function build_heap(array &$arr)
         heap_adjust($arr, $i, $n + 1);
     }
 }
+
 function heap_adjust(array &$arr, $i, $num)
 {
     if ($i > $num / 2) {
@@ -171,6 +183,7 @@ function heap_adjust(array &$arr, $i, $num)
         heap_adjust($arr, $key, $num);
     }
 }
+
 /**
  * 归并排序
  *
@@ -188,6 +201,7 @@ function merge_sort(array $arr)
     $arr = merge($left, $right);
     return $arr;
 }
+
 function merge(array $left, array $right)
 {
     $arr = [];
@@ -205,6 +219,7 @@ function merge(array $left, array $right)
     $arr = array_merge($arr, array_slice($right, $j));
     return $arr;
 }
+
 /**
  * 基数排序
  *
@@ -234,51 +249,51 @@ function radix_sort(array $arr)
 }
 
 
-
 /**
  * 计数排序
  *
  * @param array $arr
  * @return array
  */
-function counting_sort($arr) {
+function counting_sort($arr)
+{
 
     $length = count($arr);
-    if($length <= 1) return $arr;
+    if ($length <= 1) return $arr;
 
     $size = count($arr);
     $max = $arr[0];
 
     //找出数组中最大的数
-    for($i=1;$i<$size;$i++) {
-        if($max < $arr[$i]) $max = $arr[$i];
+    for ($i = 1; $i < $size; $i++) {
+        if ($max < $arr[$i]) $max = $arr[$i];
     }
 
     //初始化用来计数的数组
-    for ($i=0;$i<=$max;$i++) {
+    for ($i = 0; $i <= $max; $i++) {
         $count_arr[$i] = 0;
     }
 
     //对计数数组中键值等于$arr[$i]的加1
-    for($i=0;$i<$size;$i++) {
+    for ($i = 0; $i < $size; $i++) {
         $count_arr[$arr[$i]]++;
     }
 
     //相邻的两个值相加
-    for($i=1;$i<=$max;$i++) {
-        $count_arr[$i] = $count_arr[$i-1] + $count_arr[$i];
+    for ($i = 1; $i <= $max; $i++) {
+        $count_arr[$i] = $count_arr[$i - 1] + $count_arr[$i];
     }
 
     //键与值翻转
-    for ($i=$size-1;$i>=0;$i--) {
+    for ($i = $size - 1; $i >= 0; $i--) {
         $over_turn[$count_arr[$arr[$i]]] = $arr[$i];
         $count_arr[$arr[$i]]--; // 前一个数找到位置后，那么和它值相同的数位置往前一步
     }
 
     //按照顺序排列
     $result = array();
-    for ($i=1;$i<=$size;$i++) {
-        array_push($result,$over_turn[$i]);
+    for ($i = 1; $i <= $size; $i++) {
+        array_push($result, $over_turn[$i]);
     }
 
     return $result;
@@ -290,24 +305,25 @@ function counting_sort($arr) {
  * @param array $arr
  * @return array
  */
-function comb_sort($arr) {
+function comb_sort($arr)
+{
     $length = count($arr);
-    $step = (int)floor($length/1.3);
-    while($step >= 1) {
-        for($i=0;$i<$length;$i++) {
+    $step = (int)floor($length / 1.3);
+    while ($step >= 1) {
+        for ($i = 0; $i < $length; $i++) {
 
-            if($i+$step<$length && $arr[$i]>$arr[$i+$step]) {
+            if ($i + $step < $length && $arr[$i] > $arr[$i + $step]) {
                 $temp = $arr[$i];
-                $arr[$i] = $arr[$i+$step];
-                $arr[$i+$step] = $temp;
+                $arr[$i] = $arr[$i + $step];
+                $arr[$i + $step] = $temp;
             }
 
-            if($i+$step>$length) {
+            if ($i + $step > $length) {
                 break;
             }
 
         }
-        $step = (int)floor($step/1.3);
+        $step = (int)floor($step / 1.3);
     }
     return $arr;
 }
@@ -318,28 +334,26 @@ function comb_sort($arr) {
  * @param array $arr
  * @return array
  */
-function bucket_sort($arr){
-    $result=[];
-    $length=count($arr);
+function bucket_sort($arr)
+{
+    $result = [];
+    $length = count($arr);
     //入桶
-    for($i=0,$max=$arr[$i];$i<$length;$i++){
-        if ($max<$arr[$i]) {
-            $max=$arr[$i];
+    for ($i = 0, $max = $arr[$i]; $i < $length; $i++) {
+        if ($max < $arr[$i]) {
+            $max = $arr[$i];
         }
-        $bucket[$arr[$i]]=[];
-        array_push($bucket[$arr[$i]],$arr[$i]);
+        $bucket[$arr[$i]] = [];
+        array_push($bucket[$arr[$i]], $arr[$i]);
     }
     //出桶
-    for($i=0;$i<=$max;$i++){
-        if(!empty($bucket[$i])){
-            $l=count($bucket[$i]);
-            for ($j=0; $j <$l ; $j++) {
-                $result[]=$bucket[$i][$j];
+    for ($i = 0; $i <= $max; $i++) {
+        if (!empty($bucket[$i])) {
+            $l = count($bucket[$i]);
+            for ($j = 0; $j < $l; $j++) {
+                $result[] = $bucket[$i][$j];
             }
         }
     }
     return $result;
 }
-
-$arrTest=array(12,32,41,421,56,768,1);
-var_dump(insert_sort($arrTest));
