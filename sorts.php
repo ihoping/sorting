@@ -143,46 +143,55 @@ function select_sort(array $arr)
  */
 function heap_sort(array $arr)
 {
-    $n = count($arr);
-    build_heap($arr);
-    while (--$n) {
-        $val = $arr[0];
-        $arr[0] = $arr[$n];
-        $arr[$n] = $val;
-        heap_adjust($arr, 0, $n);
+    $len = count($arr);
+    build_heap($arr);//生成一个堆
+
+    while (--$len) {
+        swap($arr[0], $arr[$len]);
+        heap_adjust($arr, 0, $len);//重新调整堆
     }
     return $arr;
 }
 
+//第一次构建堆
 function build_heap(array &$arr)
 {
-    $n = count($arr) - 1;
-    for ($i = floor(($n - 1) / 2); $i >= 0; $i--) {
-        heap_adjust($arr, $i, $n + 1);
+    $len = count($arr);
+    for ($i = floor(($len) / 2) - 1; $i >= 0; $i--) {
+        heap_adjust($arr, $i, $len);
     }
 }
 
+//调整堆
 function heap_adjust(array &$arr, $i, $num)
 {
-    if ($i > $num / 2) {
-        return;
-    }
+    if ($i > $num / 2) return;
     $key = $i;
-    $leftChild = $i * 2 + 1;
-    $rightChild = $i * 2 + 2;
-    if ($leftChild < $num && $arr[$leftChild] > $arr[$key]) {
-        $key = $leftChild;
+    //因为从下标0开始，所以不是2*i和2*i + 1
+    $left_child = $i * 2 + 1;
+    $right_child = $i * 2 + 2;
+
+    if ($left_child < $num && $arr[$left_child] > $arr[$key]) {
+        $key = $left_child;
     }
-    if ($rightChild < $num && $arr[$rightChild] > $arr[$key]) {
-        $key = $rightChild;
+
+    if ($right_child < $num && $arr[$right_child] > $arr[$key]) {
+        $key = $right_child;
     }
+
     if ($key != $i) {
-        $val = $arr[$i];
-        $arr[$i] = $arr[$key];
-        $arr[$key] = $val;
+        swap($arr[$i], $arr[$key]);
         heap_adjust($arr, $key, $num);
     }
 }
+
+function swap(&$v1, &$v2)
+{
+    $tmp = $v1;
+    $v1 = $v2;
+    $v2 = $tmp;
+}
+
 
 /**
  * 归并排序
@@ -219,6 +228,8 @@ function merge(array $left, array $right)
     $arr = array_merge($arr, array_slice($right, $j));
     return $arr;
 }
+
+var_dump(merge_sort([13, 2, 89, 10, 56]));exit();
 
 /**
  * 基数排序
