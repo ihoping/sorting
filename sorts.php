@@ -49,6 +49,24 @@ function shell_sort(array $arr)
     }
     return $arr;
 }
+function shell_sort1($arr)
+{
+    //计算数组长度
+    $length = count($arr);
+    //计算增量
+    for ($gap = $length >> 1; $gap > 0; $gap >>= 1) {
+        //根据增量进行分组，进行直接插入排序
+        for ($i = $gap; $i < $length; $i++) {
+            $tmp = $arr[$i];
+            for ($j = $i - $gap; $j > 0 && $tmp < $arr[$j]; $j -= $gap) {
+                $arr[$j + $gap] = $arr[$j];
+                $arr[$j] = $tmp;
+            }
+        }
+    }
+    return $arr;
+}
+
 
 /**
  * 冒泡排序
